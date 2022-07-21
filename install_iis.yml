@@ -1,0 +1,28 @@
+---
+#************************************
+# Created by: Rigoberto Garcia
+# 7/21/2022
+# Description: Ansible Training File
+#************************************
+
+- name : install the iis web service
+  host: Windows
+  tasks:
+    - name: install iis
+      win_feature:
+        name: Web-Server  #Point to the webserver
+        state: present
+
+    - name: start iis service copy index.html to host
+      win_service:
+        name: W3Svc     # See if service is started or available
+        state: Started
+        
+    - name: copy index.html to host
+      Win_Copy:
+        Content: "{{ iis_test_message }}"
+        dest: c:\Inetpub\wwwroot\index.html
+
+    - name: Create Website index.html
+      debug:
+        msg: http://"{{ ansible_host }}"
